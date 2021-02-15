@@ -2,11 +2,20 @@ package com.amazon.ps5;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "account")
+@ConfigurationProperties(prefix = "amazon")
 public class AmazonDetails {
     private String emailAddress;
     private String password;
+    private String loginPage;
     private String link;
+
+    public String getLoginPage() {
+        return loginPage;
+    }
+
+    public void setLoginPage(String loginPage) {
+        this.loginPage = loginPage;
+    }
 
     public String getLink() {
         return link;
