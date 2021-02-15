@@ -42,8 +42,8 @@ class OrderPlacer {
     }
 
     public void navigateToPs5DigitalPage(){
-
-        logger.info("Navigated to PS5 Digital Edition Page");
+        safariDriver.navigate().to(amazonDetails.getLink());
+        logger.info("Navigated to PS5 Page");
     }
 
     private void checkStock(){
