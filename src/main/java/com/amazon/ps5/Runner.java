@@ -18,9 +18,9 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        orderPlacer.checkDetails();
-        orderPlacer.login();
-        orderPlacer.navigateToPs5DigitalPage();
+//        orderPlacer.checkDetails();
+//        orderPlacer.login();
+        orderPlacer.navigateToPs5Page();
         orderPlacer.keepRefreshingUntilOrderPlaced();
     }
 }
