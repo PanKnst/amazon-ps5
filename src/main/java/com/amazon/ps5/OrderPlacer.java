@@ -18,7 +18,7 @@ class OrderPlacer {
     private boolean inStock = false;
 //    private final SafariDriver safariDriver = new SafariDriver();
     private final ChromeDriver chromeDriver = new ChromeDriver();
-    private final WebDriverWait wait = new WebDriverWait(chromeDriver, 2);
+    private final WebDriverWait wait = new WebDriverWait(chromeDriver, 15);
 
     public OrderPlacer(AmazonDetails amazonDetails) {
         this.amazonDetails = amazonDetails;
@@ -40,7 +40,7 @@ class OrderPlacer {
         password.sendKeys(amazonDetails.getPassword());
         WebElement passwordNext = chromeDriver.findElementById("signInSubmit");
         passwordNext.click();
-        //If two factor authentication is needed then wait for manual input here
+        //If 2FA is needed then wait for manual input here
         WebDriverWait webDriverWait = new WebDriverWait(chromeDriver, 100);
         webDriverWait.until(
                 ExpectedConditions.visibilityOfElementLocated(By.id("nav-logo-sprites")));
@@ -48,7 +48,6 @@ class OrderPlacer {
     }
 
     public void navigateToPs5Page() {
-        //wait for page to load
         maximize();
 //        chromeDriver.navigate().to("https://www.amazon.co.uk"); //TODO: DELETE THIS when using credentials
         wait.until(
@@ -72,15 +71,21 @@ class OrderPlacer {
             logger.info("Timed out");
         }
 
-
         List<WebElement> buyButtonList = chromeDriver.findElements(By.id("add-to-cart-button"));
         inStock = buyButtonList.size() > 0;
         logger.info("Stock Found: {}", inStock);
     }
 
     private void placeOrder() {
-        WebElement buyButton = chromeDriver.findElementById("add-to-cart-button");
+        WebElement buyButton = chromeDriver.findElementById("buy-now-button");
         buyButton.click();
+        WebDriverWait waitForFrame = new WebDriverWait(chromeDriver, 60);
+        waitForFrame.until(
+                ExpectedConditions.visibilityOfElementLocated(By.id("turbo-checkout-iframe")));
+        chromeDriver.switchTo().frame("turbo-checkout-iframe");
+        WebElement buyItNowConfirmation = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.id("turbo-checkout-pyo-button")));
+        buyItNowConfirmation.click();
         logger.info("Order placed!");
     }
 
@@ -88,7 +93,7 @@ class OrderPlacer {
         while (!inStock) {
             checkStock();
         }
-//        placeOrder();
+        placeOrder();
     }
 
     public void maximize(){
